@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>흔적의 도시 | F5 : 같은 파일이 있습니다.</title>
+  <style>
+    html,body{margin:0;min-height:100%;background:#080d1b;color:#e6eaf2;font-family:system-ui,-apple-system,"Malgun Gothic",sans-serif}
+    main{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;text-align:center}
+    h1{font-size:clamp(26px,5vw,54px);letter-spacing:-.045em;margin:14px 0}
+    .eyebrow{font-size:13px;letter-spacing:.2em;color:#96a7c9}
+    p{color:#b0bad0;line-height:1.8}
+    progress{width:min(360px,80vw);height:8px;accent-color:#9ab5e8;margin-top:20px}
+    button{color:#edf3ff;background:#20375b;border:1px solid #5876a4;padding:12px 20px;border-radius:8px;cursor:pointer}
+  </style>
+</head>
+<body>
+<main id="loading">
+  <div class="eyebrow">흔적의 도시</div>
+  <h1>F5 : 같은 파일이 있습니다.</h1>
+  <p id="status" role="status">이야기를 불러오는 중입니다…</p>
+  <progress id="progress" value="0" max="13"></progress>
+</main>
+<script>
+(async function () {
+  const count = 13;
+  const status = document.getElementById('status');
+  const progress = document.getElementById('progress');
+  const parts = [];
+  try {
+    for (let i=1;i<=count;i++) {
+      const path = 'parts/f5-' + String(i).padStart(2,'0') + '.txt';
+      const response = await fetch(path, {cache:'no-cache'});
+      if (!response.ok) throw new Error(path + ': HTTP ' + response.status);
+      parts.push(await response.text());
+      progress.value = i;
+      status.textContent = '이야기를 불러오는 중입니다… (' + i + '/' + count + ')';
+    }
+    const html = parts.join('');
+    if (!/^\s*<!doctype html>/i.test(html) || !html.includes('</html>')) {
+      throw new Error('분할 파일이 올바른 HTML을 구성하지 않습니다.');
+    }
+    document.open();
+    document.write(html);
+    document.close();
+  } catch (error) {
+    console.error('F5 load failed:',error);
+    status.textContent = '이야기를 불러오지 못했습니다. (' + error.message + ')';
+    progress.hidden = true;
+    const button = document.createElement('button');
+    button.textContent = '다시 시도';
+    button.addEventListener('click', () => location.reload());
+    document.getElementById('loading').append(button);
+  }
+})();
+</script>
+</body>
+</html>
