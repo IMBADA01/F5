@@ -17,7 +17,7 @@ window.patchF5Story = function(html) {
    const end=html.indexOf('</tw-passagedata>',start);
    html=html.slice(0,start)+fn(html.slice(start,end))+html.slice(end);
  }
- change('계속되는 알람음',s=>s.replace(/&lt;div class="intro-choices"&gt;[\s\S]*?&lt;\/div&gt;\s*&lt;\/div&gt;/,'&lt;div class="intro-choices f5-single-next"&gt;[[다음 이야기-&gt;6rmo7KeQ]]&lt;/div&gt;'));
+ change('계속되는 알람음',s=>s.replace(/&lt;div class="intro-choices"&gt;[\s\S]*?&lt;\/div&gt;\s*&lt;\/div&gt;\s*&lt;\/div&gt;/,'&lt;div class="intro-choices f5-single-next"&gt;[[다음 이야기-&gt;6rmo7KeQ]]&lt;/div&gt;'));
  change('F5 : 같은 파일이 있습니다.',s=>s.replace(/&lt;div class="f5-title-footnote"&gt;[\s\S]*?&lt;\/div&gt;/,''));
  change('6rmo7KeQ',s=>s+escapeHTML('\n<div class="f5-story-next">[[다음 이야기->이67OA]]</div>'));
  change('나방 발생',s=>s+escapeHTML('\n<div class="f5-story-next">[[다음 이야기->100가지 이상을 아시나요]]</div>'));
