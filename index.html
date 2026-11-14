@@ -36,7 +36,13 @@
       progress.value = i;
       status.textContent = '이야기를 불러오는 중입니다… (' + i + '/' + count + ')';
     }
-    const html = parts.join('');
+    const source = parts.join('');
+    const patchResponse = await fetch('f5-story-updates.js', {cache:'no-cache'});
+    if (!patchResponse.ok) throw new Error('스토리 업데이트 파일을 불러오지 못했습니다.');
+    const patchScript = document.createElement('script');
+    patchScript.textContent = await patchResponse.text();
+    document.head.appendChild(patchScript);
+    const html = window.patchF5Story(source);
     if (!/^\s*<!doctype html>/i.test(html) || !html.includes('</html>')) {
       throw new Error('분할 파일이 올바른 HTML을 구성하지 않습니다.');
     }
